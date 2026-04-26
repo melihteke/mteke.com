@@ -1,0 +1,64 @@
+---
+title: "Creating CLI Tool with Click in Python Part-2"
+publishDate: 2024-10-08
+tags: ["devnet"]
+cover: "./cli2.png"
+draft: false
+---
+This is the second part of the python click library post. You can view the first part here.
+
+![](./favicon.ico)
+
+#### Example: Grouping Commands
+
+Below is a simple example demonstrating how to use the `@click.group()` decorator to group multiple commands:
+
+```python
+import click
+
+@click.group()
+def cli():
+    pass
+
+@cli.command()
+@click.argument('first_name')
+def greet(first_name):
+    click.echo(f"Hello {first_name}!")
+
+@cli.command()
+@click.argument('first_name')
+def goodbye(first_name):
+    click.echo(f"Goodbye! {first_name}!")
+
+
+if __name__ == "__main__":
+    cli()
+```
+
+#### Explanation
+
+-   **@click.group()**: This decorator is used to define a group of commands. The [`cli()`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) function serves as the entry point for the group.
+-   **@click.command()**: This decorator is used to define individual commands. In this example, we have two commands: [`greet`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) and [`goodbye`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html).
+-   **@click.argument('first\_name')**: This decorator is used to define a positional argument for the commands.
+
+By grouping the [`greet`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) and [`goodbye`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) commands under the [`cli`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) group, you can easily manage and invoke them from the command line:
+
+```shell
+python script.py greet Melih
+# Output: Hello Melih!
+
+python script.py goodbye Melih
+# Output: Goodbye! Melih!
+```
+
+#### Importance of [`click.group`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html)
+
+The [`click.group`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) functionality is important because it allows you to:
+
+1.  **Organize Commands**: Grouping commands makes your CLI application more organized and easier to navigate.
+2.  **Modular Code**: It helps in keeping the code modular by separating different functionalities into distinct commands.
+3.  **Scalability**: As your application grows, you can easily add more commands to the group without cluttering the main script.
+
+#### Conclusion
+
+The [`click.group`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) functionality in the Click library provides a structured way to manage multiple commands in a CLI application. Whether you're building a simple tool or a complex application, Click's group functionality helps keep your code organized and scalable.

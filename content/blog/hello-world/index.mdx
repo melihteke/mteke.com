@@ -1,0 +1,188 @@
+---
+title: "Hello world — the new mteke.com"
+description: "Migrating from Ghost to Next.js, the writing workflow, and a quick tour of the MDX components."
+publishDate: 2023-04-26
+tags: [meta, nextjs, mdx]
+draft: false
+---
+
+This site is built on **Next.js 16 + MDX + Tailwind v4** and is published to GitHub
+Pages. This post is a short tour of the new content format — copy, edit, ship.
+
+## Three theme modes
+
+Use the toggle in the header to switch between **Light**, **Dark**, and **Navy**.
+The whole palette — backgrounds, accents, code highlight — re-tunes automatically.
+
+## Colored callouts
+
+<Callout type="tip" title="Tip">
+  Spin up a new post with: <code>npm run new-post "Your post title"</code>. It creates
+  the folder and a frontmatter skeleton.
+</Callout>
+
+<Callout type="info" title="Info">
+  Five types are available: <code>info</code>, <code>success</code>, <code>warning</code>,
+  <code>danger</code>, <code>tip</code>. Each has its own color and icon.
+</Callout>
+
+<Callout type="warning" title="Heads up">
+  Relative <code>./image.png</code> paths inside Markdown are automatically rewritten to
+  <code>/blog/&lt;slug&gt;/image.png</code>. Just drop images next to the post.
+</Callout>
+
+<Callout type="danger" title="Caution">
+  Because we ship with <code>output: 'export'</code>, runtime features like
+  <code>cookies()</code>, server actions, and request rewrites do not work — everything
+  stays fully static.
+</Callout>
+
+## Code blocks — language-aware highlighting
+
+Default theme (matches the active site theme — light / dark / navy):
+
+```python title="automation.py" {3,5-7} showLineNumbers
+from netmiko import ConnectHandler
+
+def add(a: int, b: int) -> int:
+    return a + b
+
+def connect(host: str) -> ConnectHandler:
+    """Open an SSH session to a Cisco device."""
+    return ConnectHandler(device_type="cisco_ios", host=host)
+```
+
+### Per-block alternate themes
+
+Add `style="<name>"` to the fence to opt a single block into a different
+syntax-highlight palette. Available: `dracula`, `nord`, `solarized`, `monokai`.
+
+Dracula:
+
+```python title="dracula.py" style="dracula"
+def greet(name: str) -> str:
+    return f"Hello, {name}!"
+
+print(greet("world"))
+```
+
+Nord:
+
+```typescript title="nord.ts" style="nord"
+type User = { id: number; name: string };
+
+const users: User[] = [
+  { id: 1, name: "Ada" },
+  { id: 2, name: "Linus" },
+];
+
+users.forEach((u) => console.log(`${u.id}: ${u.name}`));
+```
+
+Solarized:
+
+```bash title="solarized.sh" style="solarized"
+# Deploy with one command
+git add . && git commit -m "post: hello world" && git push
+```
+
+Monokai:
+
+```go title="monokai.go" style="monokai"
+package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Hello, monokai!")
+}
+```
+
+Inline syntax: variables like `count{:py}` and strings like `"hello"{:py}` get colored
+individually. Plain inline `code` works too.
+
+## YouTube embeds
+
+Full width (default):
+
+<YouTube id="dQw4w9WgXcQ" title="Demo video" />
+
+60% wide, centered:
+
+<YouTube id="dQw4w9WgXcQ" width="60%" align="center" />
+
+## GitHub repo cards
+
+Use the `<GitHubRepo>` component for a rounded-square link card:
+
+<GitHubRepo
+  repo="vercel/next.js"
+  description="The React Framework for the Web — used by some of the world's largest companies."
+  language="TypeScript"
+  stars="125k"
+/>
+
+<GitHubRepo
+  repo="melihteke/mteke.com"
+  description="Source for this site — Next.js + MDX + Tailwind, statically deployed to GitHub Pages."
+  language="TypeScript"
+/>
+
+You can also just drop a plain GitHub link inline like
+[https://github.com/anthropics/claude-code](https://github.com/anthropics/claude-code)
+and it picks up a rounded chip style automatically.
+
+## Spotify embeds
+
+Track:
+
+<Spotify type="track" id="11dFghVXANMlKmJXsNCbNl" />
+
+Album:
+
+<Spotify type="album" id="1DFixLWuPkv3KT3TnV35m3" />
+
+Playlist:
+
+<Spotify type="playlist" id="37i9dQZF1DXcBWIGoYBM5M" />
+
+Podcast episode:
+
+<Spotify type="episode" id="0Q86acNRm6V9GYx55SXKwf" />
+
+## Podcast embeds (Apple / RSS / etc.)
+
+Apple Podcasts — paste the page URL, the component upgrades it to an embed:
+
+<Podcast
+  provider="apple"
+  src="https://podcasts.apple.com/us/podcast/the-changelog-software-s-best-weekly-podcast/id341623264"
+  title="The Changelog"
+/>
+
+Any provider that supplies an embeddable iframe URL also works:
+
+<Podcast
+  src="https://embed.podcasts.apple.com/us/podcast/the-changelog/id341623264?theme=auto"
+  title="Changelog episode"
+  height={175}
+/>
+
+## Tables, lists, and more
+
+| Feature          | Status   | Notes                          |
+| ---------------- | -------- | ------------------------------ |
+| Static export    | ✓        | GitHub Pages                   |
+| Three theme modes | ✓       | Light / Dark / Navy            |
+| Pagefind search  | ✓        | After `npm run build`          |
+| MDX media embeds | ✓        | GitHub / Spotify / Podcast     |
+
+> A blockquote — replaces the yellow-bordered boxes from Ghost.
+
+## What's next
+
+- Import existing Ghost posts: `npm run migrate <ghost-export.json>`
+- Tweak the palette in `src/app/globals.css` (CSS variables)
+- Update social links in `src/lib/social.ts`
+
+Happy writing 🚀

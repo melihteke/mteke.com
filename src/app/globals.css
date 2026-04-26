@@ -1,26 +1,316 @@
 @import "tailwindcss";
 
+/* Apply `dark:` utilities for both .dark and .navy (both are dark themes) */
+@custom-variant dark (&:where(.dark, .dark *, .navy, .navy *));
+
+/* ----- Color Palettes — Light / Dark / Navy ----------------
+   Three distinct themes. Change these CSS variables to retune
+   each palette. The site picks up the new colors automatically.
+   ----------------------------------------------------------- */
+
+/* :root === Light (clean white / neutral slate) */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #ffffff;
+  --bg-elev: #f5f7fa;
+  --fg: #0f172a;            /* slate-900 */
+  --fg-muted: #64748b;      /* slate-500 */
+  --accent: #2563eb;        /* blue-600 */
+  --accent-fg: #ffffff;
+  --accent-2: #0891b2;      /* cyan-600 */
+  --border: #e2e8f0;        /* slate-200 */
+  --card: #ffffff;
+  --code-bg: #f1f5f9;       /* slate-100 */
+  --selection: #bfdbfe;
+}
+
+/* .dark === True dark grey/black, neutral */
+.dark {
+  --bg: #0b0b0d;            /* near-black */
+  --bg-elev: #161618;       /* zinc-900-ish */
+  --fg: #f4f4f5;            /* zinc-100 */
+  --fg-muted: #a1a1aa;      /* zinc-400 */
+  --accent: #a78bfa;        /* violet-400 */
+  --accent-fg: #1a1625;
+  --accent-2: #34d399;      /* emerald-400 */
+  --border: #27272a;        /* zinc-800 */
+  --card: #131316;
+  --code-bg: #1a1a1d;
+  --selection: #4c1d95;
+}
+
+/* .navy === Deep navy with bright cyan/blue accent */
+.navy {
+  --bg: #0a0f1f;
+  --bg-elev: #111a36;
+  --fg: #e8eefb;
+  --fg-muted: #94a3b8;
+  --accent: #60a5fa;        /* blue-400 */
+  --accent-fg: #06112a;
+  --accent-2: #22d3ee;      /* cyan-400 */
+  --border: #1e2a4a;
+  --card: #0f1730;
+  --code-bg: #0a1126;
+  --selection: #1d4ed8;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: var(--bg);
+  --color-bg-elev: var(--bg-elev);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-2: var(--accent-2);
+  --color-border: var(--border);
+  --color-card: var(--card);
+  --color-code-bg: var(--code-bg);
+
+  --font-sans: var(--font-sans-stack);
+  --font-mono: var(--font-mono-stack);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--bg);
+  color: var(--fg);
+  color-scheme: light;
 }
+.dark,
+.navy { color-scheme: dark; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans-stack, ui-sans-serif, system-ui, sans-serif);
+  -webkit-font-smoothing: antialiased;
 }
+
+::selection {
+  background: var(--selection);
+  color: var(--fg);
+}
+
+/* Smooth theme transitions (sayfa renkleri yumuşak geçer) */
+html,
+body,
+* {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-duration: 180ms;
+  transition-timing-function: ease-in-out;
+}
+
+/* Shiki / rehype-pretty-code — three theme variants
+   The plugin emits CSS vars: --shiki-{key} and --shiki-{key}-bg per token.
+   We pick the right one based on the active theme class on <html>. */
+code[data-theme*=" "],
+code[data-theme*=" "] span {
+  color: var(--shiki-light);
+  background-color: var(--shiki-light-bg);
+}
+.dark code[data-theme*=" "],
+.dark code[data-theme*=" "] span {
+  color: var(--shiki-dark);
+  background-color: var(--shiki-dark-bg);
+}
+.navy code[data-theme*=" "],
+.navy code[data-theme*=" "] span {
+  color: var(--shiki-navy);
+  background-color: var(--shiki-navy-bg);
+}
+
+/* Per-block code style override.
+   Authors can opt a single block into an alternate theme by adding a
+   class on the rendered <figure> (set via MDX wrapper / meta). */
+figure[data-code-style="dracula"] code[data-theme*=" "],
+figure[data-code-style="dracula"] code[data-theme*=" "] span {
+  color: var(--shiki-dracula) !important;
+  background-color: var(--shiki-dracula-bg) !important;
+}
+figure[data-code-style="nord"] code[data-theme*=" "],
+figure[data-code-style="nord"] code[data-theme*=" "] span {
+  color: var(--shiki-nord) !important;
+  background-color: var(--shiki-nord-bg) !important;
+}
+figure[data-code-style="solarized"] code[data-theme*=" "],
+figure[data-code-style="solarized"] code[data-theme*=" "] span {
+  color: var(--shiki-solarized) !important;
+  background-color: var(--shiki-solarized-bg) !important;
+}
+figure[data-code-style="monokai"] code[data-theme*=" "],
+figure[data-code-style="monokai"] code[data-theme*=" "] span {
+  color: var(--shiki-monokai) !important;
+  background-color: var(--shiki-monokai-bg) !important;
+}
+
+pre[data-theme*=" "] {
+  background-color: transparent !important;
+}
+
+figure[data-rehype-pretty-code-figure] pre {
+  padding: 1rem 0;
+  overflow-x: auto;
+  border-radius: 0.625rem;
+  background: var(--code-bg);
+}
+
+code[data-line-numbers] {
+  counter-reset: line;
+}
+code[data-line-numbers] > [data-line]::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  width: 1.75rem;
+  margin-right: 1rem;
+  text-align: right;
+  color: var(--fg-muted);
+  opacity: 0.6;
+}
+
+[data-line] {
+  padding: 0 1rem;
+  border-left: 2px solid transparent;
+}
+[data-highlighted-line] {
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  border-left-color: var(--accent);
+}
+[data-highlighted-chars] {
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  border-radius: 0.25rem;
+  padding: 0 0.15rem;
+}
+figure[data-rehype-pretty-code-figure] [data-rehype-pretty-code-title] {
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  font-family: var(--font-mono-stack);
+  color: var(--fg-muted);
+  border-bottom: 1px solid var(--border);
+  background: var(--code-bg);
+  border-top-left-radius: 0.625rem;
+  border-top-right-radius: 0.625rem;
+}
+
+/* Anchor links yumuşak scroll */
+html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+
+/* ----- prose-content: blog yazıları için tipografi -------- */
+.prose-content {
+  font-size: 1.05rem;
+  line-height: 1.78;
+  color: var(--fg);
+}
+.prose-content > * + * { margin-top: 1.25em; }
+
+.prose-content p { margin-block: 1em; }
+
+.prose-content h2,
+.prose-content h3,
+.prose-content h4 {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  scroll-margin-top: 5rem;
+  position: relative;
+}
+.prose-content h2 { font-size: 1.55em; margin-top: 2.25em; margin-bottom: 0.75em; }
+.prose-content h3 { font-size: 1.25em; margin-top: 1.75em; margin-bottom: 0.5em; }
+.prose-content h4 { font-size: 1.05em; margin-top: 1.4em; margin-bottom: 0.4em; }
+
+.prose-content a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: text-decoration-thickness 120ms ease;
+}
+.prose-content a:hover { text-decoration-thickness: 2px; }
+
+/* Rounded-square style for inline GitHub repo links.
+   Targets <a href="https://github.com/owner/repo"> inside prose. */
+.prose-content a[href^="https://github.com/"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.15em 0.55em;
+  margin: 0 0.1em;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  background: var(--bg-elev);
+  text-decoration: none;
+  font-family: var(--font-mono-stack);
+  font-size: 0.92em;
+  color: var(--fg);
+  transition: border-color 150ms ease, color 150ms ease, background-color 150ms ease;
+}
+.prose-content a[href^="https://github.com/"]::before {
+  content: "";
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'><path d='M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.57.11.78-.25.78-.55v-1.93c-3.2.7-3.87-1.54-3.87-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.76 2.69 1.25 3.35.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.27-5.24-5.66 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.15 1.17a10.94 10.94 0 0 1 5.74 0c2.19-1.48 3.15-1.17 3.15-1.17.62 1.59.23 2.76.11 3.05.74.8 1.18 1.82 1.18 3.07 0 4.4-2.69 5.36-5.25 5.65.41.36.78 1.06.78 2.14v3.18c0 .31.21.67.79.55 4.56-1.52 7.85-5.83 7.85-10.91C23.5 5.65 18.35.5 12 .5Z'/></svg>") center / contain no-repeat;
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'><path d='M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.57.11.78-.25.78-.55v-1.93c-3.2.7-3.87-1.54-3.87-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.76 2.69 1.25 3.35.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.27-5.24-5.66 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.15 1.17a10.94 10.94 0 0 1 5.74 0c2.19-1.48 3.15-1.17 3.15-1.17.62 1.59.23 2.76.11 3.05.74.8 1.18 1.82 1.18 3.07 0 4.4-2.69 5.36-5.25 5.65.41.36.78 1.06.78 2.14v3.18c0 .31.21.67.79.55 4.56-1.52 7.85-5.83 7.85-10.91C23.5 5.65 18.35.5 12 .5Z'/></svg>") center / contain no-repeat;
+  flex: none;
+}
+.prose-content a[href^="https://github.com/"]:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg-elev));
+}
+
+.prose-content strong { color: var(--fg); font-weight: 600; }
+.prose-content em { font-style: italic; }
+
+.prose-content ul,
+.prose-content ol { padding-left: 1.5em; }
+.prose-content ul { list-style: disc; }
+.prose-content ol { list-style: decimal; }
+.prose-content li { margin-block: 0.4em; }
+.prose-content li > p { margin-block: 0.4em; }
+
+.prose-content blockquote {
+  border-left: 3px solid var(--accent);
+  padding: 0.4em 1em;
+  font-style: italic;
+  color: var(--fg-muted);
+  background: var(--bg-elev);
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.prose-content table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--border);
+  border-radius: 0.625rem;
+  overflow: hidden;
+  font-size: 0.95em;
+}
+.prose-content th,
+.prose-content td {
+  padding: 0.55em 0.85em;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+.prose-content th { background: var(--bg-elev); font-weight: 600; }
+.prose-content tr:last-child td { border-bottom: none; }
+
+.prose-content hr { border-color: var(--border); margin-block: 2em; }
+.prose-content img { border-radius: 0.625rem; border: 1px solid var(--border); }
+
+.prose-content :not(pre) > code {
+  background: var(--code-bg);
+  padding: 0.15em 0.4em;
+  border-radius: 0.3rem;
+  font-size: 0.92em;
+  font-family: var(--font-mono-stack);
+  border: 1px solid var(--border);
+}
+
+.prose-content .heading-anchor {
+  margin-left: 0.4em;
+  color: var(--fg-muted);
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 180ms;
+  font-weight: 400;
+}
+.prose-content h2:hover .heading-anchor,
+.prose-content h3:hover .heading-anchor,
+.prose-content h4:hover .heading-anchor { opacity: 0.55; }

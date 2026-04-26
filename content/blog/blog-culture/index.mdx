@@ -1,0 +1,98 @@
+---
+title: "Blog Culture"
+description: ""
+publishDate: 2023-04-26
+tags: []
+# cover: ./cover.png
+draft: false
+---
+
+This site is built on **Next.js 16 + MDX + Tailwind v4** and is published to GitHub
+Pages. This post is a short tour of the new content format — copy, edit, ship.
+
+## Colored callouts
+
+<Callout type="tip" title="Tip">
+  Spin up a new post with: <code>npm run new-post "Your post title"</code>. It creates
+  the folder and a frontmatter skeleton.
+</Callout>
+
+<Callout type="info" title="Info">
+  Five types are available: <code>info</code>, <code>success</code>, <code>warning</code>,
+  <code>danger</code>, <code>tip</code>. Each has its own color and icon.
+</Callout>
+
+<Callout type="warning" title="Heads up">
+  Relative <code>./image.png</code> paths inside Markdown are automatically rewritten to
+  <code>/blog/&lt;slug&gt;/image.png</code>. Just drop images next to the post.
+</Callout>
+
+<Callout type="danger" title="Caution">
+  Because we ship with <code>output: 'export'</code>, runtime features like
+  <code>cookies()</code>, server actions, and request rewrites do not work — everything
+  stays fully static.
+</Callout>
+
+## Code blocks — language-aware highlighting
+
+Python:
+
+```python title="automation.py" {3,5-7} showLineNumbers
+from netmiko import ConnectHandler
+
+def add(a: int, b: int) -> int:
+    return a + b
+
+def connect(host: str) -> ConnectHandler:
+    """Open an SSH session to a Cisco device."""
+    return ConnectHandler(device_type="cisco_ios", host=host)
+```
+
+Bash:
+
+```bash
+# Create a new post
+npm run new-post "My new post"
+git add . && git commit -m "post: my-new-post" && git push
+```
+
+YAML:
+
+```yaml title=".github/workflows/deploy.yml"
+name: Deploy
+on:
+  push:
+    branches: [main]
+```
+
+Inline syntax: variables like `count{:py}` and strings like `"hello"{:py}` get colored
+individually. Plain inline `code` works too.
+
+## YouTube embeds
+
+Full width (default):
+
+<YouTube id="dQw4w9WgXcQ" title="Demo video" />
+
+60% wide, centered:
+
+<YouTube id="dQw4w9WgXcQ" width="60%" align="center" />
+
+## Tables, lists, and more
+
+| Feature          | Status   | Notes                          |
+| ---------------- | -------- | ------------------------------ |
+| Static export    | ✓        | GitHub Pages                   |
+| Dark/light mode  | ✓        | Defaults to dark               |
+| Pagefind search  | ✓        | After `npm run build`          |
+| Giscus comments  | Config.  | In `src/lib/site.ts`           |
+
+> A blockquote — replaces the yellow-bordered boxes from Ghost.
+
+## What's next
+
+- Import existing Ghost posts: `npm run migrate <ghost-export.json>`
+- Tweak the palette in `src/app/globals.css` (CSS variables)
+- Update social links in `src/lib/social.ts`
+
+Happy writing 🚀

@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# mteke.com
 
-## Getting Started
+Personal site of **Melih Teke** — built with **Next.js (App Router) + MDX + Tailwind v4**, statically exported to **GitHub Pages**.
 
-First, run the development server:
+- Posts live under `content/blog/<slug>/index.mdx`
+- Cover and inline images sit in the same folder; the `predev` / `prebuild` hook copies them to `public/blog/<slug>/`
+- Push → GitHub Actions → Pages → live in 1–2 minutes
+
+## Quickstart
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev          # http://localhost:3000
+
+npm run build        # production export → out/ (+ Pagefind index)
+npm run start        # serves out/ on :3000 to preview the static build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Authoring & deploying
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Two focused guides live under `docs/`:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Guide | What it covers |
+| ----- | -------------- |
+| [docs/AUTHORING.md](docs/AUTHORING.md) | Write a new post, frontmatter, every MDX component (Callout, YouTube, GitHubRepo, Spotify, Podcast, Figure), code highlighting, images, drafts |
+| [docs/DEPLOY.md](docs/DEPLOY.md) | Push the repo to GitHub, enable Pages, point a custom domain, DNS records, troubleshooting |
 
-## Learn More
+For a one-line summary:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run new-post "Your post title"
+# write content/blog/<slug>/index.mdx, drop images next to it
+git add . && git commit -m "post: <slug>" && git push
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Where to change things
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| What | Where |
+| ---- | ----- |
+| Color palettes (light / dark / navy) | `src/app/globals.css` — `:root`, `.dark`, `.navy` blocks |
+| Site name, domain, author | `src/lib/site.ts` |
+| Social links | `src/lib/social.ts` |
+| Header nav | `src/components/header.tsx` |
+| Projects shown on /projects | `src/app/projects/page.tsx` (the `projects` array) |
+| Add a new MDX component | `src/components/mdx/<name>.tsx` + register in `mdx/index.ts` |
 
-## Deploy on Vercel
+## Migrating from Ghost (one-shot)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+# Ghost Admin → Settings → Labs → Export content (downloads a JSON file)
+# Save it at the project root as ghost-export.json, then:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+npm run migrate -- --ghost-url=https://your-ghost-host.example.com
+```
+
+Posts that fail to compile after migration (raw `<script>`, inline CSS, etc.)
+are skipped at build time with a `[posts] skipping "<slug>"` warning — open
+those `index.mdx` files and tidy them up by hand.
+
+## License
+
+Site content © Melih Teke. Code is MIT.

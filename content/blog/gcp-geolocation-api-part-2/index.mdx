@@ -1,0 +1,83 @@
+---
+title: "GCP Geolocation API Part-2"
+publishDate: 2024-08-20
+updatedDate: 2024-10-03
+tags: []
+cover: "./google2.png"
+draft: false
+---
+### Task: Coordinates to Physical Address
+
+![](./coor2address.svg)
+
+.toc { margin: 20px; padding: 10px; border: 1px solid #ccc; } .toc h2 { cursor: pointer; } .toc h3 { cursor: pointer; } .toc h4 { cursor: pointer; } .toc-content { display: none; margin-top: 10px; } .toc-content ul ul { margin-left: 20px; }
+
+### Table of Contents
+
+-   [Create Python Code to Convert Coordinates to Address](#section1)
+-   [Conclusion](#section2)
+
+function toggleTOC() { var tocContent = document.querySelector('.toc-content'); if (tocContent.style.display === "none" || tocContent.style.display === "") { tocContent.style.display = "block"; } else { tocContent.style.display = "none"; } }
+
+In this part, I will write a Python script to convert coordinates (latitude and longitude) into a physical address using the Google Maps Geocoding API. I won't be covering how to enable the GCP API here; you can refer to Part 1 for those instructions.
+
+![](./favicon.ico)
+
+```python
+import requests
+
+"""
+This code finds the address for given coordinates (latitude and longitude)
+Coordinates to Address
+"""
+
+def get_address(api_key, lat, lng):
+    base_url = "https://maps.googleapis.com/maps/api/geocode/json"
+    params = {
+        'latlng': f"{lat},{lng}",
+        'key': api_key
+    }
+    
+    response = requests.get(base_url, params=params)
+    
+    if response.status_code == 200:
+        data = response.json()
+        if data['status'] == 'OK':
+            address = data['results'][0]['formatted_address']
+            return address
+        else:
+            print(f"Error: {data['status']}")
+            return None
+    else:
+        print(f"HTTP Error: {response.status_code}")
+        return None
+
+if __name__ == "__main__":
+    api_key = "<API-KEY-HERE>"  # Replace with your Google API key
+    lat = 52.35786179999999  # Replace with the latitude you want to geocode
+    lng = 4.8814097  # Replace with the longitude you want to geocode
+    
+    address = get_address(api_key, lat, lng)
+    
+    if address:
+        data = {"address": f"{address}"}
+        print(data)
+```
+
+0:00
+
+/0:06
+
+ 1× 
+
+These coordinates point to the famous Van Gogh Museum in Amsterdam.
+
+![](./maps15_bnuw3a_32dp.ico)
+
+### Conclusion:
+
+This Python script demonstrates how to use the Google Maps Geocoding API to convert coordinates into a physical address. By sending a request to the API with the specified latitude, longitude, and API key, the script retrieves the corresponding address. This can be particularly useful for applications that require reverse geolocation data, such as mapping services, location-based services, and geographic information systems. Simply replace the placeholder API key and coordinates with your own to get started.
+
+You can check Part-3 of the post here:
+
+![](./favicon.ico)

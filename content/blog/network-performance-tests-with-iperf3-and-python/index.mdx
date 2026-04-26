@@ -1,0 +1,75 @@
+---
+title: "Network Performance Tests with Iperf3 and Python"
+publishDate: 2024-07-25
+updatedDate: 2024-10-03
+tags: ["hash-post"]
+cover: "./iperf3-1.png"
+draft: false
+---
+In the digital age, ensuring optimal network performance is paramount for businesses and individuals alike. Iperf3, a widely recognized network testing tool, offers a robust solution for measuring bandwidth and performance metrics. However, the real magic happens when we combine Iperf3's capabilities with the automation power of Python. This blog post delves into a concise yet effective way to automate network performance testing using Iperf3 and Python.  
+  
+**The Power of Iperf3**  
+Iperf3 is an open-source tool that facilitates network throughput measurements. It can test the bandwidth between two endpoints in your network, acting as a server on one end and a client on the other. This tool is essential for network administrators looking to troubleshoot or optimize network performance.  
+  
+**Automating with Python**  
+Python's simplicity and versatility make it an ideal candidate for automating and streamlining network tests with Iperf3. By wrapping Iperf3 commands within Python functions, we can initiate tests with minimal effort and integrate these tests into larger network management or monitoring solutions.  
+  
+**Server-Side**  
+On the server side, our Python script invokes Iperf3 in server mode, listening for incoming connections:  
+
+```python
+import subprocess
+
+def run_iperf_server():
+    subprocess.run(['iperf3-darwin', '-s', '-p', '5202'])
+
+run_iperf_server()
+```
+
+💡
+
+This function launches an Iperf3 server that listens on port 5202. The use of `iperf3-darwin` indicates this script is tailored for macOS environments, but it can be easily adapted to other platforms by replacing `iperf3-darwin` with just `iperf3`.
+
+```python
+import subprocess
+
+def run_iperf_client(server_ip):
+    subprocess.run(['iperf3-darwin', '-c', server_ip, '-p', '5202'])
+
+run_iperf_client('192.168.178.240')
+```
+
+Here, the function takes the server's IP address as an argument and connects to the server on port 5202, effectively measuring the network's performance between these two points.  
+  
+**Iperf3 Client-Server Demonstration**
+
+0:00
+
+/0:33
+
+ 1× 
+
+Iperf3 Client-Server Demonstration
+
+  
+
+#### The Benefits of This Approach
+
+💡
+
+Automating Iperf3 tests with Python scripts offers several advantages:  
+****Efficiency****: Launching tests with a simple function call speeds up the process and reduces manual work.  
+****Flexibility****: Scripts can be easily modified or extended to suit different testing scenarios or integrate with other tools.  
+****Scalability****: Automating tests makes it easier to schedule regular performance assessments or integrate them into continuous deployment pipelines.
+
+![](./pinned-octocat-093da3e6fa40.svg)
+
+Below, you'll find some list of public iPerf3 servers to test your client script with.
+
+-   [https://iperf.fr/iperf-servers.php](https://iperf.fr/iperf-servers.php)
+-   [https://github.com/R0GGER/public-iperf3-servers](https://github.com/R0GGER/public-iperf3-servers)
+
+* * *
+
+**Conclusion**  
+Combining Iperf3 with Python automation provides a powerful and efficient method for conducting network performance tests. This approach not only simplifies the testing process but also opens up new possibilities for integrating performance testing into larger network management practices. Whether you're a network administrator, engineer, or IT professional, leveraging Python to automate Iperf3 tests can significantly enhance your network performance monitoring and troubleshooting capabilities.

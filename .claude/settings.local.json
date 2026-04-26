@@ -2,7 +2,40 @@
   "permissions": {
     "allow": [
       "Bash(npm --version)",
-      "Bash(npx --yes create-next-app@latest . --ts --tailwind --app --src-dir --import-alias \"@/*\" --eslint --use-npm --turbopack --yes)"
+      "Bash(npx --yes create-next-app@latest . --ts --tailwind --app --src-dir --import-alias \"@/*\" --eslint --use-npm --turbopack --yes)",
+      "Bash(npm install *)",
+      "Bash(npm pkg *)",
+      "Bash(npm view *)",
+      "Bash(npm run *)",
+      "Bash(grep -viE \"\\(Lucide|Icon$\\)\")",
+      "Bash(grep -iE \"^default as \\(Send|Mail|Github|Linkedin|Twitter|X$|Youtube|YouTube|Container|Rss|Moon|Sun|Monitor|Copy|Check|Info|Lightbulb|CheckCircle|Search|ExternalLink|Clock|Telegram\\)\")",
+      "Bash(grep -iE \"\\(github|linkedin|^six$|twitter|youtube|telegram|docker\\)\")",
+      "Bash(grep -iE \"^\\(SiGithub|SiGithubcopilot|SiLinkedin|SiX$|SiXdotcom|SiTelegram|SiYoutube|SiDocker|SiNextdotjs|SiReact\\)\")",
+      "Bash(grep -iE \"\\(linkedin|twitter|^FaXTwitter|^FaX$|github|youtube|telegram|docker\\)\")",
+      "Bash(ls -la .github)",
+      "Bash(ls -la scripts)",
+      "Bash(ls README.md)",
+      "Bash(tail -f \"C:\\\\\\\\Users\\\\\\\\MELIHT~1\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Temp\\\\\\\\claude\\\\\\\\C--Users-melihteke-Documents-Projects-mteke-com\\\\\\\\427c4e60-7ab8-4ccd-8985-5dd9f3aa3612\\\\\\\\tasks\\\\\\\\bpdqrnfh9.output\")",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(tasklist /FI \"IMAGENAME eq node.exe\")",
+      "Bash(grep -oE \"documentElement\\\\.classList[^<]{0,100}\" out/index.html)",
+      "Bash(curl -s http://localhost:3001/)",
+      "Bash(curl -s http://localhost:3001/_next/static/chunks/_e74ae5d4._.css)",
+      "Bash(curl -s \"http://localhost:3001/\")",
+      "Bash(curl -s \"http://localhost:3001/_next/static/chunks/%5Broot-of-the-server%5D__085jr41._.css\")",
+      "Bash(grep -oE \"\\(\\\\.dark[^{]*\\\\{[^}]{0,200}\\\\}|:root[^{]*\\\\{[^}]{0,200}--bg[^}]{0,200}\\\\}\\)\")",
+      "Read(//tmp/**)",
+      "Bash(curl -s http://localhost:3001/ -o /dev/null -w \"HTTP %{http_code}\\\\n\")",
+      "Bash(node -e \"const d=JSON.parse\\(require\\('fs'\\).readFileSync\\('ghost-export.json','utf8'\\)\\);const s=d?.db?.[0]?.data?.settings||d?.data?.settings||[];const keys=new Set\\(\\);for\\(const r of s\\){keys.add\\(r.key\\)};const interesting=['url','blog_title','title','site_url','description'];for\\(const k of interesting\\){const found=s.find\\(r=>r.key===k\\);if\\(found\\)console.log\\(k,'=',found.value\\)}\")",
+      "Bash(node -e \"const d=JSON.parse\\(require\\('fs'\\).readFileSync\\('ghost-export.json','utf8'\\)\\);const posts=d?.db?.[0]?.data?.posts||[];const sample=posts.slice\\(0,3\\).map\\(p=>\\({slug:p.slug,feature_image:p.feature_image,html_excerpt:\\(p.html||''\\).slice\\(0,200\\)}\\)\\);console.log\\(JSON.stringify\\(sample,null,2\\)\\)\")",
+      "Bash(npm uninstall *)",
+      "WebFetch(domain:www.mteke.com)",
+      "Bash(taskkill //PID 48716 //F)",
+      "Bash(gh auth *)",
+      "Bash(git config *)",
+      "Bash(git ls-remote *)",
+      "Bash(git branch *)",
+      "Bash(git add *)"
     ]
   }
 }

@@ -1,0 +1,85 @@
+---
+title: "Sending SMS with Python and Twilio"
+publishDate: 2024-10-30
+tags: ["hobby"]
+cover: "./sms2.png"
+draft: false
+---
+In this blog post, I will demonstrate how to send an SMS using Python and Twilio. We will use the `twilio` library to interact with the Twilio API and the `python-dotenv` library to manage our credentials securely.
+
+#### Prerequisites
+
+1.  **Sign Up for a Twilio Account**: If you don't already have a Twilio account, sign up with trial account at [Twilio Console](https://console.twilio.com/).
+2.  **Retrieve Credentials**: After signing up, log in to the [Twilio Console](https://console.twilio.com/) to get the following details:
+    -   **Account SID**: Your unique account identifier.
+    -   **Auth Token**: Your authentication token for API requests.
+    -   **Twilio Phone Number**: A phone number provided by Twilio for sending messages.
+3.  **Python Environment**: Ensure you have Python installed on your machine.
+4.  **Install Required Libraries**: Install the `twilio` and `python-dotenv` libraries using pip:
+
+```python
+pip install twilio python-dotenv
+```
+
+#### Step-by-Step Guide
+
+1.  **Create a .env File**: Create a .env file in your project directory and add your Twilio credentials:
+2.  **Add Twilio Credentials**: Add your Twilio credentials to the .env file. You can find these details in the [Twilio Console](https://console.twilio.com/).
+
+```shell
+TWILIO_ACCOUNT_SID=your_account_sid
+TWILIO_AUTH_TOKEN=your_auth_token
+TWILIO_PHONE_NUMBER=your_twilio_phone_number
+```
+
+3.  **Write the Python Script**: Create a Python script (e.g., `send_sms.py`) and add the following code:
+
+```python
+from twilio.rest import Client
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Twilio credentials
+account_sid = os.getenv('TWILIO_ACCOUNT_SID')
+auth_token = os.getenv('TWILIO_AUTH_TOKEN')
+twilio_number = os.getenv('TWILIO_PHONE_NUMBER')
+
+# Create a Twilio client
+client = Client(account_sid, auth_token)
+
+# Send an SMS
+to_number = '+3197010586489'  # Replace with the recipient's phone number
+message_body = 'TEST-3 SMS SENT FROM PYTHON AND TWILIO'
+
+message = client.messages.create(
+    body=message_body,
+    from_=twilio_number,
+    to=to_number
+)
+
+print(f"Message sent with SID: {message.sid}")
+```
+
+4.  **Run the Script**: Execute the script to send the SMS:
+
+```python
+python send_sms.py
+```
+
+0:00
+
+/0:37
+
+ 1× 
+
+#### Explanation
+
+-   **Load Environment Variables**: The `load_dotenv()` function loads the environment variables from the .env file.
+-   **Twilio Credentials**: The credentials are retrieved using `os.getenv()`.
+-   **Create Twilio Client**: A Twilio client is created using the retrieved credentials.
+-   **Send SMS**: The `client.messages.create()` method sends the SMS to the specified number.
+
+By following these steps, you can easily send SMS messages using Python and Twilio. This approach ensures that your credentials are managed securely using environment variables.

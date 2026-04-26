@@ -1,0 +1,78 @@
+---
+title: "Creating CLI Tool with Click in Python  Part-1"
+publishDate: 2024-10-08
+tags: ["devnet"]
+cover: "./click.png"
+draft: false
+---
+In this blog post, we'll explore how to create a command-line interface (CLI) using the [`click`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) library in Python. [`click`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) is a package that simplifies the creation of command-line tools by providing decorators and functions to handle arguments, options, and commands.
+
+We'll walk through an example script that demonstrates various features of [`click`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html), including positional arguments, options, and flags.
+
+#### Installation
+
+First, ensure you have [`click`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) installed. You can install it using pip:
+
+```python
+pip install click
+```
+
+#### Example Script
+
+Below is an example script that uses [`click`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) to create a CLI tool. This tool greets a user based on the provided arguments and options.
+
+```python
+import click
+
+@click.command()
+@click.argument('first_name')
+@click.argument('last_name')
+@click.option('--name', prompt='Your name', help='The person to greet.', default='World', show_default=True)
+@click.option('--age', type=int, help='Your age.', required=False)
+@click.option('--verbose', is_flag=True, help='Enables verbose mode.')
+@click.option('--color', type=click.Choice(['red', 'green', 'blue'], case_sensitive=False), help='Your favorite color.')
+@click.option('--tags', multiple=True, help='Tags for the greeting.')
+def greet(first_name, last_name, name, age, verbose, color, tags):
+    greeting = f"Hello {first_name} {last_name}, age {age}!"
+    if verbose:
+        greeting += " Verbose mode is enabled."
+    if color:
+        greeting += f" Your favorite color is {color}."
+    if tags:
+        greeting += f" Tags: {', '.join(tags)}"
+    click.echo(greeting)
+
+if __name__ == "__main__":
+    greet()
+```
+
+#### Explanation
+
+-   `@click.command()`: This decorator turns the function into a CLI command.
+-   `@click.argument('first_name')`: This defines a positional argument [`first_name`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html).
+-   `@click.argument('last_name')`: This defines a positional argument [`last_name`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html).
+-   `@click.option('--name', prompt='Your name', help='The person to greet.', default='World', show_default=True)`: This defines an option `--name` with a prompt and a default value.
+-   `@click.option('--age', type=int, help='Your age.', required=False)`: This defines an optional integer option `--age`.
+-   `@click.option('--verbose', is_flag=True, help='Enables verbose mode.')`: This defines a boolean flag `--verbose`.
+-   `@click.option('--color', type=click.Choice(['red', 'green', 'blue'], case_sensitive=False), help='Your favorite color.')`: This defines an option `--color` with a choice of values.
+-   `@click.option('--tags', multiple=True, help='Tags for the greeting.')`: This defines an option `--tags` that can be specified multiple times.
+
+#### Running the Script
+
+To run the script, save it to a file (e.g., [`greet.py`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html)) and execute it from the command line:
+
+```python
+python greet.py Melih Teke --age 30 --verbose --color blue --tags tag1 --tags tag2
+```
+
+This will output:
+
+```python
+Hello Melih Teke, age 30! Verbose mode is enabled. Your favorite color is blue. Tags: tag1, tag2
+```
+
+#### Conclusion
+
+The [`click`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) library makes it easy to create powerful and user-friendly command-line interfaces in Python. By using decorators and a few simple functions, you can handle complex argument parsing and provide helpful prompts and messages to users.
+
+Feel free to experiment with the example script and explore additional features of [`click`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) to create your own CLI tools. !

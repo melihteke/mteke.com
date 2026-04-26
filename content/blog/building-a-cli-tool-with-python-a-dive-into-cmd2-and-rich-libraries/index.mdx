@@ -1,0 +1,126 @@
+---
+title: "Building a CLI Tool with Python: A Dive into cmd2 and Rich Libraries"
+publishDate: 2024-07-25
+updatedDate: 2024-10-03
+tags: ["hash-post"]
+cover: "./cmd2.png"
+draft: false
+---
+.toc { margin: 20px; padding: 10px; border: 1px solid #ccc; } .toc h2 { cursor: pointer; } .toc h3 { cursor: pointer; } .toc h4 { cursor: pointer; } .toc-content { display: none; margin-top: 10px; } .toc-content ul ul { margin-left: 20px; }
+
+### Table of Contents
+
+-   [The Foundations: cmd2 and Rich](#section2-1)
+-   [Initialization and Setup](#section2-2)
+-   [Implementing Commands](#section2-3)
+-   [Enhancing Feedback with Rich](#section2-3)
+-   [Running the Application](#section2-3)
+-   [Conclusion](#section2-3)
+
+function toggleTOC() { var tocContent = document.querySelector('.toc-content'); if (tocContent.style.display === "none" || tocContent.style.display === "") { tocContent.style.display = "block"; } else { tocContent.style.display = "none"; } }
+
+In the realm of network operations and system administration, command-line interfaces (CLI) remain a staple for their efficiency and flexibility. Python, with its vast ecosystem of libraries, offers powerful tools to build custom CLI applications. Among these, [`cmd2`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) and [`rich`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) stand out for creating interactive, feature-rich command-line tools. Let's explore how these libraries come together in a sample application, providing a practical example of their capabilities.
+
+## The Foundations: cmd2 and Rich
+
+Before diving into the code, it's essential to understand the roles of [`cmd2`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) and [`rich`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) in our application. [`cmd2`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) is a library for building command-line applications with out-of-the-box support for features like command looping, history, and scripting. On the other hand, [`rich`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) is a library designed to create beautiful and rich text and layout in the terminal, enhancing the user interface of CLI applications.
+
+```python
+import cmd2
+from rich.progress import track
+from time import sleep
+from rich.console import Console
+
+def process_bar(description='[green]Processing'):
+    """Mock progress bar for visual feedback during operations."""
+    def process_data():
+        sleep(0.01)
+    for _ in track(range(100), description=description):
+        process_data()
+
+class MyApp(cmd2.Cmd):
+    """A simple cmd2 application."""
+
+
+    def __init__(self):
+        super().__init__()
+        self.prompt = 'provision-tool> '
+        # Initialize params as an instance variable
+        self.console = Console()
+        self.store_number = ""
+
+        self.intro = """
+        [bold magenta]Provisioning Tool[/bold magenta]
+
+        The command line interface for managing your network operations efficiently.
+        Type ? to list commands, or ?command to get help on a specific command.
+        """
+
+        self.params = {}
+    
+    def preloop(self):
+        if self.intro:
+            self.console.print(self.intro)
+            self.intro = None  # Prevent cmd2 from printing the intro again
+
+
+    def do_auth(self, arg):
+        """Authenticate the user."""
+        process_bar('[green]Authenticating')
+        self.poutput("You are now authenticated.")
+
+    def do_logout(self, arg):
+        """Log out the user."""
+        self.poutput("You are now logged out.")
+
+    def do_auth_params(self, arg):
+        """Authenticate the user with parameters."""
+        console = Console()
+        process_bar('[green]Authenticating with parameters')
+        console.print("📝✨ Configuration files have been generated successfully! 🍻", emoji=True)
+
+    def do_generate_config(self, arg):
+        """Generate a mock configuration."""
+        self.poutput("Configuration generated.")
+
+    def do_exit(self, arg):
+        """Exit the application."""
+        self.poutput("Exiting the application.")
+        return True
+
+if __name__ == '__main__':
+    app = MyApp()
+    app.cmdloop()
+```
+
+0:00
+
+/0:38
+
+ 1× 
+
+Cmd2 - Rich Library Tutorial
+
+### Initialization and Setup
+
+The [`MyApp`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) class inherits from [`cmd2.Cmd`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html), laying the foundation for our CLI application. In the [`__init__`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) method, we perform initial setup, including setting the command prompt to `provision-tool>` and printing an introductory message using [`rich`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html)'s [`Console`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) class. This setup enhances user experience by providing a clear, visually appealing entry point to the application.
+
+### Implementing Commands
+
+The application defines several commands (`auth`, `logout`, `auth_params`, `generate_config`, and `exit`), each implemented as a method with the `do_` prefix. These methods are automatically recognized by [`cmd2`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) as commands available to the user.
+
+-   **Authentication Commands**: [`do_auth`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) and [`do_auth_params`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) simulate user authentication processes, with [`do_auth_params`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) demonstrating how to handle command parameters. Both methods use a mock progress bar, implemented with [`rich`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html)'s [`track`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) function, to provide visual feedback during the authentication process.
+-   **Configuration and Logout**: [`do_generate_config`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) mocks the generation of configuration files, while [`do_logout`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) provides a simple logout mechanism.
+-   **Exiting the Application**: [`do_exit`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) allows users to gracefully exit the application.
+
+### Enhancing Feedback with Rich
+
+The [`process_bar`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) function showcases how to integrate [`rich`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html)'s progress bar into CLI operations, offering a polished, user-friendly experience. By combining [`track`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) with a simple loop, we create a dynamic progress bar that visually represents the operation's progress.
+
+### Running the Application
+
+The application is designed to be run interactively. Upon execution, users are greeted with the introductory message and can interact with the tool using the defined commands. The integration of [`cmd2`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) and [`rich`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) not only simplifies the creation of complex CLI applications but also elevates the user experience with minimal effort.
+
+## Conclusion
+
+This sample application illustrates the synergy between [`cmd2`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) and [`rich`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html), demonstrating how they can be used to build a functional, aesthetically pleasing CLI tool. Whether you're managing network operations, automating tasks, or simply exploring Python's capabilities, these libraries offer a robust foundation for your CLI applications.

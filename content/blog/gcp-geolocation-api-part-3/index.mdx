@@ -1,0 +1,73 @@
+---
+title: "GCP Geolocation API Part-3"
+publishDate: 2024-08-20
+updatedDate: 2024-10-03
+tags: []
+cover: "./google3.png"
+draft: false
+---
+In this part, we will write a Python script to find the current location coordinates in real-time using the Google Geolocation API. This script will send a request to the API and retrieve the latitude, longitude, and accuracy of the current location.  
+
+.toc { margin: 20px; padding: 10px; border: 1px solid #ccc; } .toc h2 { cursor: pointer; } .toc h3 { cursor: pointer; } .toc h4 { cursor: pointer; } .toc-content { display: none; margin-top: 10px; } .toc-content ul ul { margin-left: 20px; }
+
+### Table of Contents
+
+-   [Create Python Code to retrieve the coordinates in real time](#section1)
+-   [Conclusion](#section2)
+
+function toggleTOC() { var tocContent = document.querySelector('.toc-content'); if (tocContent.style.display === "none" || tocContent.style.display === "") { tocContent.style.display = "block"; } else { tocContent.style.display = "none"; } }
+
+![](./client-part3.svg)
+
+  
+I won't be covering how to enable the GCP API here; you can refer to Part 1 for those instructions.
+
+![](./favicon.ico)
+
+```python
+import requests
+
+"""
+This code finds where is the current location coordinates in real time.
+"""
+
+def get_current_location(api_key):
+    url = "https://www.googleapis.com/geolocation/v1/geolocate?key=" + api_key
+    data = {
+        "considerIp": "true"
+    }
+    
+    response = requests.post(url, json=data)
+    
+    if response.status_code == 200:
+        location_data = response.json()
+        lat = location_data['location']['lat']
+        lng = location_data['location']['lng']
+        accuracy = location_data['accuracy']
+        return lat, lng, accuracy
+    else:
+        print(f"HTTP Error: {response.status_code}")
+        return None
+
+if __name__ == "__main__":
+    api_key = "<API-KEY-HERE>"  # Replace with your Google API key
+    location = get_current_location(api_key)
+    
+    if location:
+        lat, lng, accuracy = location
+        print(f"Current Location: Latitude = {lat}, Longitude = {lng}, Accuracy = {accuracy} meters")
+```
+
+0:00
+
+/0:05
+
+ 1× 
+
+### Conclusion:
+
+This Python script demonstrates how to use the Google Geolocation API to retrieve real-time coordinates. By sending a request to the API with the specified API key, the script retrieves the latitude, longitude, and accuracy of the current location. This can be particularly useful for applications that require real-time location data, such as tracking services, location-based services, and geographic information systems. Simply replace the placeholder API key with your own to get started.
+
+You can check Part-2 of the post here:
+
+![](./favicon.ico)

@@ -1,0 +1,99 @@
+---
+title: "Building a Voice-Activated Command System with Python"
+publishDate: 2024-09-20
+updatedDate: 2024-10-02
+tags: []
+cover: "./python-mic.png"
+draft: false
+---
+In this blog post, we'll explore how to create a voice-activated command system using Python. We'll leverage the `SpeechRecognition` library for recognizing speech, [`pyttsx3`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) for text-to-speech conversion, and [`pyaudio`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) for handling audio input. This system will listen for specific commands and respond accordingly.
+
+## Prerequisites
+
+Before we dive into the code, make sure you have the necessary libraries installed. You can install them using the following command:
+
+```python
+pip install SpeechRecognition pyttsx3 pyaudio
+```
+
+## The Code
+
+Here's the complete code for our voice-activated command system:
+
+```python
+import speech_recognition as sr
+import pyttsx3
+import sys
+
+# Initialize the recognizer and TTS engine
+recognizer = sr.Recognizer()
+tts_engine = pyttsx3.init()
+
+# Set properties for TTS
+tts_engine.setProperty('rate', 150)  # Speed of speech
+tts_engine.setProperty('volume', 1)  # Volume level (0.0 to 1.0)
+#voices = tts_engine.getProperty('voices')
+#tts_engine.setProperty('voice', voices[1].id)  # Change the voice (0 for male, 1 for female)
+
+def speak(text):
+    tts_engine.say(text)
+    tts_engine.runAndWait()
+
+def listen():
+    with sr.Microphone() as source:
+        print("Listening to your voice...")
+        recognizer.adjust_for_ambient_noise(source)
+        audio = recognizer.listen(source)
+        try:
+            command = recognizer.recognize_google(audio)
+            print(f"You said: {command}")
+            print("This is not a command!")
+            speak("This is not a command!")
+            return command.lower()
+        except sr.UnknownValueError:
+            print("Sorry, I did not understand that.")
+        except sr.RequestError:
+            print("Sorry, my speech service is down.")
+        return ""
+
+def execute_command(command):
+    if "nokia" in command:
+        print("Command Received!")
+        speak("Your command has been received!")
+    elif "cisco" in command:
+        print("Command Received!")
+        speak("Your command has been received!")
+    elif "stop" in command:
+        print("Command Received!")
+        speak("The application has been stopped!")
+        sys.exit()
+
+if __name__ == "__main__":
+    speak("Voice Assistant is starting...")
+    speak("What is your command?")
+    while True:
+        command = listen()
+        if command:
+            execute_command(command)
+```
+
+### Explanation
+
+1.  **Initialization**: We initialize the speech recognizer and text-to-speech (TTS) engine.
+2.  **TTS Properties**: We set the speech rate and volume for the TTS engine. Optionally, you can change the voice.
+3.  **Speak Function**: This function takes a text string and converts it to speech.
+4.  **Listen Function**: This function listens for audio input, converts it to text using Google's speech recognition service, and returns the recognized command.
+5.  **Execute Command Function**: This function checks the recognized command and performs actions based on specific keywords ("nokia", "cisco", "stop").
+6.  **Main Loop**: The main loop initializes the voice assistant and continuously listens for commands, executing them as they are recognized.
+
+## Source Code
+
+You can find the complete source code for this project on my [GitHub repository](https://github.com/melihteke/voice-command-app.git).
+
+![](./pinned-octocat-093da3e6fa40.svg)
+
+## Conclusion
+
+Creating a voice-activated command system in Python is straightforward with the right libraries. This project can be extended to include more complex commands and functionalities, making it a powerful tool for various applications.
+
+Feel free to contact me if you have any questions or suggestions.

@@ -1,0 +1,72 @@
+---
+title: "Converting MOV to MP4  Using Python"
+publishDate: 2024-09-25
+updatedDate: 2024-10-03
+tags: []
+cover: "./mov2mp4.png"
+draft: false
+---
+#### Introduction
+
+If you frequently do screen recordings on your MacBook, you might have noticed that macOS saves these recordings in MOV format. While MOV files are great for quality, they tend to take up a lot of space. To address this issue, I created a simple Python script to convert MOV files to MP4 format using the MoviePy library. This script ensures efficient video encoding with audio support by leveraging ffmpeg. With the help of GitHub Copilot, I was able to develop this solution quickly and effectively.
+
+#### The Code
+
+Here's the Python script that performs the conversion:
+
+```python
+from moviepy.editor import VideoFileClip
+
+def convert_mov_to_mp4(input_path, output_path):
+    # Load the .mov file
+    video_clip = VideoFileClip(input_path)
+    
+    # Write the video file to .mp4 format with audio, using a faster preset
+    video_clip.write_videofile(
+        output_path,
+        codec='libx264',
+        audio_codec='aac',
+        ffmpeg_params=['-preset', 'fast', '-crf', '23', '-threads', '4']
+    )
+
+# Example usage
+input_path = "test.mov"
+output_path = "output.mp4"
+convert_mov_to_mp4(input_path, output_path)
+```
+
+#### How It Works
+
+1.  **Import the Necessary Library**: The script uses the MoviePy library, which is a versatile tool for video editing in Python.
+2.  **Load the MOV File**: The [`VideoFileClip`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) function loads the input MOV file.
+3.  **Convert and Save as MP4**: The [`write_videofile`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) function converts the video to MP4 format, using the [`libx264`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) codec for video and [`aac`](vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) codec for audio. The ffmpeg parameters ensure efficient encoding.
+
+#### Installation
+
+Before running the script, make sure you have the necessary dependencies installed:
+
+**Install ffmpeg**:
+
+```shellbrew
+brew install ffmpeg
+```
+
+**Install MoviePy:**
+
+```shell
+pip install moviepy
+```
+
+#### Example Usage
+
+Replace `"test.mov"` with the path to your MOV file and `"output.mp4"` with the desired output path for the MP4 file. Run the script to perform the conversion.
+
+#### Code Repo:
+
+![](./pinned-octocat-093da3e6fa40-1.svg)
+
+#### Demonstration:
+
+#### Conclusion
+
+This script provides a quick and efficient way to convert MOV files to MP4 format, saving storage space and ensuring compatibility. By leveraging the power of MoviePy and ffmpeg, you can handle video conversions directly from your Python environment.

@@ -1,0 +1,161 @@
+---
+title: "Upgrading a Cisco Catalyst 9300 Switch in Install Mode"
+publishDate: 2024-11-27
+tags: []
+cover: "./upgrade-1.png"
+draft: false
+---
+In this post, I will explain how to upgrade a Cisco Catalyst 9300 switch in install mode.
+
+An install mode upgrade on a Cisco Catalyst 9300 switch involves upgrading the switch's software using individual software packages rather than a single, large image file.
+
+Remove any boot images
+
+```cisco
+Switch#conf ter
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)# no boot system <image-name>
+```
+
+Changing the boot image to packages.conf file.
+
+```cisco
+Switch#conf ter
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)# boot system flash:packages.conf
+Switch(config)# do wr
+```
+
+💡
+
+Ensure that you have already installed the new image on the device's flash memory and verified its integrity.  
+  
+****Copy the Image:****  
+`Switch#copy usbflash0:<file_name>.bin flash:`
+
+****Verify the Image:****
+
+`Switch#verify /md5 flash:<file_name>.bin`
+
+  
+Start installing the new image file:
+
+```cisco
+Switch#install add file flash:cat9k_iosxe.17.09.04a.SPA.bin activate commit
+```
+
+This will start certain of processes and you will probably see a similar output like below:
+
+```cisco
+Switch#install add file flash:cat9k_iosxe.17.09.04a.SPA.bin activate commit
+install_add_activate_commit: START Wed Nov 27 09:19:24 UTC 2024
+install_add: START Wed Nov 27 09:19:24 UTC 2024
+install_add: Adding IMG
+ [5] Switch 5 Warning!!! Image is being downgraded from 17.12.04.0.4826 to 17.09.04a.0.6.
+ [4] Switch 4 Warning!!! Image is being downgraded from 17.12.04.0.4826 to 17.09.04a.0.6.
+ [2] Switch 2 Warning!!! Image is being downgraded from 17.12.04.0.4826 to 17.09.04a.0.6.
+ [3] Switch 3 Warning!!! Image is being downgraded from 17.12.04.0.4826 to 17.09.04a.0.6.
+--- Starting initial file syncing ---
+Copying flash:cat9k_iosxe.17.09.04a.SPA.bin from Switch 1 to Switch 1 2 3 4 5
+Info: Finished copying to the selected Switch
+Finished initial file syncing
+
+--- Starting Add ---
+Performing Add on all members
+Checking status of Add on [1 2 3 4 5]
+Add: Passed on [1 2 3 4 5]
+Image added. Version: 17.09.04a.0.6
+
+Finished Add
+
+install_activate: START Wed Nov 27 09:21:46 UTC 2024
+install_activate: Activating IMG
+Following packages shall be activated:
+/flash/cat9k-cc_srdriver.17.09.04a.SPA.pkg
+/flash/cat9k-espbase.17.09.04a.SPA.pkg
+/flash/cat9k-guestshell.17.09.04a.SPA.pkg
+/flash/cat9k-lni.17.09.04a.SPA.pkg
+/flash/cat9k-rpbase.17.09.04a.SPA.pkg
+/flash/cat9k-sipbase.17.09.04a.SPA.pkg
+/flash/cat9k-sipspa.17.09.04a.SPA.pkg
+/flash/cat9k-srdriver.17.09.04a.SPA.pkg
+/flash/cat9k-webui.17.09.04a.SPA.pkg
+/flash/cat9k-wlc.17.09.04a.SPA.pkg
+/flash/cat9k-rpboot.17.09.04a.SPA.pkg
+```
+
+Proceed for reload operation by selecting "y"
+
+```cisco
+This operation may require a reload of the system. Do you want to proceed? [y/n]y
+```
+
+Afterwards the device comes back in new image
+
+```cisco
+--- Starting Activate ---
+Performing Activate on all members
+ [1] Activate package(s) on Switch 1
+ [2] Activate package(s) on Switch 2
+ [3] Activate package(s) on Switch 3
+ [4] Activate package(s) on Switch 4
+ [5] Activate package(s) on Switch 5
+  [4] Finished Activate on Switch 4
+ [5] Finished Activate on Switch 5
+ [3] Finished Activate on Switch 3
+ [2] Finished Activate on Switch 2
+ [1] Finished Activate on Switch 1
+Checking status of Activate on [1 2 3 4 5]
+Activate: Passed on [1 2 3 4 5]
+Finished Activate
+
+--- Starting Commit ---
+Performing Commit on all members
+ [1] Commit package(s) on Switch 1
+ [2] Commit package(s) on Switch 2
+ [5] Commit package(s) on Switch 5
+ [4] Commit package(s) on Switch 4
+ [3] Commit package(s) on Switch 3
+ [5] Finished Commit on Switch 5
+ [3] Finished Commit on Switch 3
+ [4] Finished Commit on Switch 4
+ [2] Finished Commit on Switch 2
+ [1] Finished Commit on Switch 1
+Checking status of Commit on [1 2 3 4 5]
+Commit: Passed on [1 2 3 4 5]
+Finished Commit operation
+
+MM [1] MCU version 224 sw ver 228
+MM [2] MCU version 224 sw ver 228
+
+
+                                                                  MCU UPGRADE IN PROGRESS... PLEASE DO NOT POWER CYCLE!!
+
+Front-end Microcode IMG MGR: found 4 microcode images for.
+Image for front-end 0: /tmp/microcode_update/front_end/fe_type_6_0 update needed: no
+Image for front-end 0: /tmp/microcode_update/front_end/fe_type_6_1 update needed: yes
+Image for front-end 0: /tmp/microcode_update/front_end/fe_type_6_3 update needed: no
+
+Front-end Microcode IMG aring to program device microcode...
+Front-end Microcode IMG MGR: Preparing to program device[0], index=0 ...594412 bytes.... Skipped[0].
+Front-end Microcode IMG MGR: Preparing todevice[0], index=1 ...578044 bytes.
+Front-end Microcode IMG MGR: Programming device 0...rwRrrrrrrw..0%..................................................................................................10%..........................................................................................................20%...................................................................................................30%...........................................................................................................40%...................................................................................................50%..................................................................................................60%............................................................................................................70%.................................................................................................80%.....................................................................................................................90%..........................................................................................................100%
+Front-end Microcode IMG MGR: Preparing to program device[0], index=2 ...24506 bytes.
+Front-end Microcode IMG MGR: Programming device 0...rrrrrrw..0%....10%....20%......30%...40%....50%......60%....70%.....80%....90%....100%w
+Wating for MCU to come up .....Rr!
+MCU UPGRADE COMPLETED!!...SUCCESS: install_add_activate_commit Wed Nov 27 09:32:02 UTC 2024
+Switch#
+Chassis 3 reloading, reason - Reload command
+Nov 27 09:32:11.693: %PMAN-5-EXITACTION: F0/0: pvp: Process manager is exiting: reload fp action requested
+Nov 27 09:32:13.460: %PMAN-5-EXITACTION: R0/0: pvp: Process manager is exiting: rp processes exit with reload switch code
+```
+
+💡
+
+If there is not enough space in the flash memory, you can use the following command to free up some space:  
+Switch#install remove inactive
+
+You can see official cisco web [site](https://www.cisco.com/c/en/us/support/docs/switches/catalyst-9300-series-switches/222280-upgrading-catalyst-9300-switches.html#:~:text=An%20install%20mode%20upgrade%20on,a%20single%20monolithic%20image%20file.) information and also you can check the official demostration from cisco in youtube.
+
+  
+In conclusion, I wanted to share this procedure to help you successfully upgrade your Cisco Catalyst 9300 switch in install mode. Thank you for reading, and I hope you found this information helpful and informative.

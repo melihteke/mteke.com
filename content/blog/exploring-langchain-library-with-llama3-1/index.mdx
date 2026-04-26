@@ -1,0 +1,90 @@
+---
+title: "Exploring LangChain Library with Llama3.1"
+publishDate: 2024-12-27
+tags: []
+cover: "./langchain.png"
+draft: false
+---
+LangChain is a powerful library designed to facilitate the development of applications that use large language models (LLMs). In this blog post, we will explore how to use LangChain with the llama3.1 model to create a simple chatbot that generates random network engineer jokes locally.
+
+### Getting Started
+
+First, let's ensure we have the necessary libraries installed. You can install LangChain using pip:
+
+```bash
+pip install langchain_ollama
+```
+
+Pull llama3.1 model to your local
+
+```bash
+ollama pull llama3.1
+```
+
+### Setting Up the Model
+
+```python
+from langchain_ollama import ChatOllama
+from langchain_core.messages import HumanMessage, SystemMessage
+import json
+
+# Initialize the model
+local_llm = "llama3.1:latest"
+llm_json_mode = ChatOllama(model=local_llm, temperature=0.9, format='json')
+```
+
+### Defining the Conversation
+
+Next, we define a simple conversation. We create a **SystemMessage** to set the context for the assistant and a **HumanMessage** with the user's input.
+
+```python
+# Define a simple conversation
+system_message = [SystemMessage(content="You are a Network Engineer. Return JSON with single key, joke, that is a joke.")]
+human_message = [HumanMessage(content="Can you tell me a random network engineer joke?")]
+```
+
+### Generating a Response
+
+```python
+# Generate a response
+response = llm_json_mode.invoke(system_message + human_message)
+```
+
+### Full Code
+
+```python
+from langchain_ollama import ChatOllama
+from langchain_core.messages import HumanMessage, SystemMessage
+import json
+
+# Initialize the model
+local_llm = "llama3.1:latest"
+llm = ChatOllama(model=local_llm, temperature=0.9)
+llm_json_mode = ChatOllama(model=local_llm, temperature=0.9, format='json')
+
+# Define a simple conversation
+system_message = [SystemMessage(content="You are a Network Engineer. Return JSON with single key, joke, that is a joke.")]
+human_message = [HumanMessage(content="Can you tell me a random network engineer joke?")]
+
+# Generate a response
+response = llm_json_mode.invoke(system_message + human_message)
+
+# Print the response
+print(json.loads(response.content))
+```
+
+```python
+   ...: 
+Out[4]: {'joke': "Why did the network engineer quit his job?\nBecause he didn't get a good connection with his boss!"}
+
+In [5]: 
+```
+
+### Conclusion
+
+In this blog post, we explored how to use LangChain with the ChatOllama model to create a simple chatbot that generates random network engineer jokes. By adjusting the temperature parameter, we can introduce more randomness in the model's output. LangChain provides a powerful and flexible way to work with large language models, making it easier to build sophisticated applications.  
+  
+You can also see this videa and I think this is quite useful to understand the langchain concept.
+
+Feel free to experiment with different prompts and settings to see what other interesting responses you can generate!  
+Thank you for reading and I hope this is useful for you.
