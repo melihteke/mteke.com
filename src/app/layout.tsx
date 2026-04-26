@@ -62,6 +62,13 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${inter.variable} ${jetbrainsMono.variable} h-full`}
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('mteke-code-theme');var v={'github-light':1,'github-dark':1,dracula:1,nord:1,solarized:1,monokai:1};if(t&&v[t]){document.documentElement.setAttribute('data-code-theme',t);}}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-bg text-fg">
         <ThemeProvider
           attribute="class"

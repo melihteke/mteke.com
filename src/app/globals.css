@@ -115,28 +115,118 @@ code[data-theme*=" "] span {
   background-color: var(--shiki-navy-bg);
 }
 
-/* Per-block code style override.
-   Authors can opt a single block into an alternate theme by adding a
-   class on the rendered <figure> (set via MDX wrapper / meta). */
-figure[data-code-style="dracula"] code[data-theme*=" "],
-figure[data-code-style="dracula"] code[data-theme*=" "] span {
+/* Global code-theme override (visitor-selectable via <CodeThemePicker>).
+   When `data-code-theme` is set on <html>, every code block uses that
+   theme regardless of the active site theme. Also retunes the wrapping
+   <pre> background so the chrome matches the highlighted tokens. */
+html[data-code-theme="github-light"] code[data-theme*=" "],
+html[data-code-theme="github-light"] code[data-theme*=" "] span {
+  color: var(--shiki-light);
+  background-color: var(--shiki-light-bg);
+}
+html[data-code-theme="github-light"] figure[data-rehype-pretty-code-figure] pre,
+html[data-code-theme="github-light"] figure[data-rehype-pretty-code-figure] [data-rehype-pretty-code-title] {
+  background: #f6f8fa !important;
+  border-color: #d0d7de;
+}
+
+html[data-code-theme="github-dark"] code[data-theme*=" "],
+html[data-code-theme="github-dark"] code[data-theme*=" "] span {
+  color: var(--shiki-navy);
+  background-color: var(--shiki-navy-bg);
+}
+html[data-code-theme="github-dark"] figure[data-rehype-pretty-code-figure] pre,
+html[data-code-theme="github-dark"] figure[data-rehype-pretty-code-figure] [data-rehype-pretty-code-title] {
+  background: #24292e !important;
+  border-color: #30363d;
+}
+
+html[data-code-theme="dracula"] code[data-theme*=" "],
+html[data-code-theme="dracula"] code[data-theme*=" "] span {
+  color: var(--shiki-dracula);
+  background-color: var(--shiki-dracula-bg);
+}
+html[data-code-theme="dracula"] figure[data-rehype-pretty-code-figure] pre,
+html[data-code-theme="dracula"] figure[data-rehype-pretty-code-figure] [data-rehype-pretty-code-title] {
+  background: #282a36 !important;
+  border-color: #44475a;
+}
+
+html[data-code-theme="nord"] code[data-theme*=" "],
+html[data-code-theme="nord"] code[data-theme*=" "] span {
+  color: var(--shiki-nord);
+  background-color: var(--shiki-nord-bg);
+}
+html[data-code-theme="nord"] figure[data-rehype-pretty-code-figure] pre,
+html[data-code-theme="nord"] figure[data-rehype-pretty-code-figure] [data-rehype-pretty-code-title] {
+  background: #2e3440 !important;
+  border-color: #3b4252;
+}
+
+html[data-code-theme="solarized"] code[data-theme*=" "],
+html[data-code-theme="solarized"] code[data-theme*=" "] span {
+  color: var(--shiki-solarized);
+  background-color: var(--shiki-solarized-bg);
+}
+html[data-code-theme="solarized"] figure[data-rehype-pretty-code-figure] pre,
+html[data-code-theme="solarized"] figure[data-rehype-pretty-code-figure] [data-rehype-pretty-code-title] {
+  background: #002b36 !important;
+  border-color: #073642;
+}
+
+html[data-code-theme="monokai"] code[data-theme*=" "],
+html[data-code-theme="monokai"] code[data-theme*=" "] span {
+  color: var(--shiki-monokai);
+  background-color: var(--shiki-monokai-bg);
+}
+html[data-code-theme="monokai"] figure[data-rehype-pretty-code-figure] pre,
+html[data-code-theme="monokai"] figure[data-rehype-pretty-code-figure] [data-rehype-pretty-code-title] {
+  background: #272822 !important;
+  border-color: #3e3d32;
+}
+
+/* Per-block code style override (author opt-in via `style="..."` meta).
+   Higher specificity than the global picker so authors win — even when
+   the visitor has chosen a different code theme. */
+html figure[data-code-style="dracula"] code[data-theme*=" "],
+html figure[data-code-style="dracula"] code[data-theme*=" "] span {
   color: var(--shiki-dracula) !important;
   background-color: var(--shiki-dracula-bg) !important;
 }
-figure[data-code-style="nord"] code[data-theme*=" "],
-figure[data-code-style="nord"] code[data-theme*=" "] span {
+html figure[data-code-style="dracula"] pre,
+html figure[data-code-style="dracula"] [data-rehype-pretty-code-title] {
+  background: #282a36 !important;
+  border-color: #44475a !important;
+}
+html figure[data-code-style="nord"] code[data-theme*=" "],
+html figure[data-code-style="nord"] code[data-theme*=" "] span {
   color: var(--shiki-nord) !important;
   background-color: var(--shiki-nord-bg) !important;
 }
-figure[data-code-style="solarized"] code[data-theme*=" "],
-figure[data-code-style="solarized"] code[data-theme*=" "] span {
+html figure[data-code-style="nord"] pre,
+html figure[data-code-style="nord"] [data-rehype-pretty-code-title] {
+  background: #2e3440 !important;
+  border-color: #3b4252 !important;
+}
+html figure[data-code-style="solarized"] code[data-theme*=" "],
+html figure[data-code-style="solarized"] code[data-theme*=" "] span {
   color: var(--shiki-solarized) !important;
   background-color: var(--shiki-solarized-bg) !important;
 }
-figure[data-code-style="monokai"] code[data-theme*=" "],
-figure[data-code-style="monokai"] code[data-theme*=" "] span {
+html figure[data-code-style="solarized"] pre,
+html figure[data-code-style="solarized"] [data-rehype-pretty-code-title] {
+  background: #002b36 !important;
+  border-color: #073642 !important;
+}
+html figure[data-code-style="monokai"] code[data-theme*=" "],
+html figure[data-code-style="monokai"] code[data-theme*=" "] span {
   color: var(--shiki-monokai) !important;
   background-color: var(--shiki-monokai-bg) !important;
+}
+html figure[data-code-style="monokai"] pre,
+html figure[data-code-style="monokai"] [data-rehype-pretty-code-title] {
+  background: #272822 !important;
+  border-color: #3e3d32 !important;
 }
 
 pre[data-theme*=" "] {

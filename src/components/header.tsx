@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { CodeThemePicker } from "@/components/code-theme-picker";
 import { siteConfig } from "@/lib/site";
 
 const nav = [
@@ -33,7 +34,10 @@ export function Header() {
           ))}
         </nav>
 
-        <ThemeToggle />
+        <div className="flex items-center gap-2">
+          <CodeThemePicker />
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );
