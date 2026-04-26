@@ -34,7 +34,7 @@
   --accent-2: #34d399;      /* emerald-400 */
   --border: #27272a;        /* zinc-800 */
   --card: #131316;
-  --code-bg: #1a1a1d;
+  --code-bg: #1f2227;
   --selection: #4c1d95;
 }
 
@@ -49,7 +49,7 @@
   --accent-2: #22d3ee;      /* cyan-400 */
   --border: #1e2a4a;
   --card: #0f1730;
-  --code-bg: #0a1126;
+  --code-bg: #172246;
   --selection: #1d4ed8;
 }
 
@@ -148,6 +148,7 @@ figure[data-rehype-pretty-code-figure] pre {
   overflow-x: auto;
   border-radius: 0.625rem;
   background: var(--code-bg);
+  border: 1px solid var(--border);
 }
 
 code[data-line-numbers] {

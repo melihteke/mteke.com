@@ -126,6 +126,23 @@ You can also drop a plain GitHub URL inline — the prose styling automatically 
 Source available on [https://github.com/melihteke/mteke.com](https://github.com/melihteke/mteke.com).
 ```
 
+### PyPI package card
+
+```mdx
+<PyPI
+  pkg="wtisdk"
+  description="A Pythonic API wrapper for Western Telematic console servers and PDUs."
+  version="0.3.1"
+  python="Python 3.8+"
+/>
+```
+
+Props:
+- `pkg` — the PyPI package name (required). Card links to `https://pypi.org/project/<pkg>/`.
+- `description` — one-line summary, optional.
+- `version` — display the current version, optional.
+- `python` — Python version requirement label, optional.
+
 ### Spotify — track / album / playlist / podcast episode
 
 ```mdx

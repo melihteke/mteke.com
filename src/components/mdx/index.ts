@@ -5,6 +5,7 @@ import { Pre } from "./code-block";
 import { GitHubRepo } from "./github-repo";
 import { Spotify } from "./spotify";
 import { Podcast } from "./podcast";
+import { PyPI } from "./pypi";
 
 export const mdxComponents = {
   Callout,
@@ -13,5 +14,6 @@ export const mdxComponents = {
   GitHubRepo,
   Spotify,
   Podcast,
+  PyPI,
   pre: Pre,
 };
