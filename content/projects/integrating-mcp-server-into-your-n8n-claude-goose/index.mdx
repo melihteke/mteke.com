@@ -1,0 +1,41 @@
+---
+title: "Subnet Calculator MCP Server"
+description: "A FastMCP server that exposes subnet math (network, broadcast, host range, masks) as a tool any Claude / Goose / n8n agent can call."
+publishDate: 2025-04-16
+updatedDate: 2025-04-17
+tags: [mcp, python, fastmcp, networking, ai-agents]
+featured: true
+link: "https://mcp-subnet-calculator.mteke.com/sse"
+---
+
+Managing subnets is fiddly for large language models — calculating usable IP ranges, broadcast addresses, netmasks, and wildcards is the kind of thing they cheerfully get wrong. The **Subnet Calculator MCP Server** offloads it to a deterministic tool that any MCP-aware agent can call.
+
+The server is built on the **FastMCP** framework. Send it a CIDR (e.g. `192.168.1.0/24`) and it returns:
+
+- Network address
+- Broadcast address
+- Usable host range
+- Number of usable hosts
+- Netmask and wildcard mask
+
+### Accessing it from n8n
+
+[n8n](https://n8n.io/) lets you wire workflows and agents together without writing code. Drop the MCP node in, point it at the server URL below, and the calculator is available as a tool inside any agent flow.
+
+### Accessing it from Goose
+
+[Goose](https://block.github.io/goose/) is a desktop client that brings AI assistants into your local environment. Add the MCP server in Goose's settings and the subnet tools show up in Claude / OpenAI / Ollama conversations.
+
+### Accessing it from Claude Desktop
+
+The [Claude Desktop](https://claude.ai/download) app speaks MCP natively. Edit `claude_desktop_config.json`, add the server, restart — and Claude can now resolve subnet questions exactly.
+
+### Try it
+
+The server is publicly hosted at:
+
+```
+https://mcp-subnet-calculator.mteke.com/sse
+```
+
+Point any MCP-capable agent at it and ask "what's the host range of 10.0.0.0/22?" — you'll get a clean, structured answer back instead of a hallucination.

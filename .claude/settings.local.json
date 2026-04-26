@@ -35,7 +35,17 @@
       "Bash(git config *)",
       "Bash(git ls-remote *)",
       "Bash(git branch *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git remote *)",
+      "Bash(git push *)",
+      "Bash(curl -s \"https://api.github.com/repos/melihteke/mteke.com/actions/runs?per_page=3\")",
+      "Bash(curl -s \"https://api.github.com/repos/melihteke/mteke.com/actions/runs/24966093902/jobs\")",
+      "Bash(python -c \"import sys, json; data = json.load\\(sys.stdin\\); [print\\(f\\\\\"\\\\\\\\n=== JOB: {j['name']} \\({j['conclusion']}\\) ===\\\\\"\\) or [print\\(f\\\\\"  [{s['conclusion']}] {s['name']}\\\\\"\\) for s in j['steps']] for j in data['jobs']]\")",
+      "Bash(curl -sL -o /tmp/run-logs.zip -w \"HTTP_STATUS:%{http_code}\\\\n\" \"https://api.github.com/repos/melihteke/mteke.com/actions/runs/24966093902/logs\")",
+      "Bash(curl -sL \"https://melihteke.github.io/mteke.com/\")",
+      "Bash(git commit *)",
+      "Bash(node -e ' *)",
+      "Bash(tasklist //FI \"IMAGENAME eq node.exe\")"
     ]
   }
 }

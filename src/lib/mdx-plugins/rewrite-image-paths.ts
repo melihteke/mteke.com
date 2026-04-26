@@ -10,8 +10,8 @@ import type { Root } from "mdast";
 type JsxAttribute = { type: string; name?: string; value?: unknown };
 type JsxNode = { type: string; attributes?: JsxAttribute[] };
 
-export function rewriteImagePaths(slug: string) {
-  const prefix = `/blog/${slug}/`;
+export function rewriteImagePaths(slug: string, base: "blog" | "projects" = "blog") {
+  const prefix = `/${base}/${slug}/`;
   const isRelative = (url: unknown): url is string =>
     typeof url === "string" && url.startsWith("./");
 

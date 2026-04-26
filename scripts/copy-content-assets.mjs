@@ -1,12 +1,11 @@
-// content/blog/<slug>/*.{png,jpg,gif,svg,webp,avif,mp4,webm}
-// dosyalarını public/blog/<slug>/ altına kopyalar. Böylece MDX
-// içinde ./image.png yazılan dosyalar yayınlanan sitede çalışır.
+// Copies content/<base>/<slug>/*.{png,jpg,gif,svg,webp,avif,mp4,webm,...}
+// into public/<base>/<slug>/ for both blog posts and project pages, so MDX
+// references like ./image.png resolve from the deployed site.
 
 import fs from "node:fs/promises";
 import path from "node:path";
 
-const SRC = path.join(process.cwd(), "content", "blog");
-const DEST = path.join(process.cwd(), "public", "blog");
+const BASES = ["blog", "projects"];
 const ALLOWED = new Set([
   ".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp", ".avif",
   ".mp4", ".webm", ".mov",
@@ -29,13 +28,20 @@ async function walk(dir) {
   return out;
 }
 
-const files = await walk(SRC);
-let copied = 0;
-for (const file of files) {
-  const rel = path.relative(SRC, file);
-  const dest = path.join(DEST, rel);
-  await fs.mkdir(path.dirname(dest), { recursive: true });
-  await fs.copyFile(file, dest);
-  copied++;
+let totalCopied = 0;
+for (const base of BASES) {
+  const src = path.join(process.cwd(), "content", base);
+  const dest = path.join(process.cwd(), "public", base);
+  const files = await walk(src);
+  for (const file of files) {
+    const rel = path.relative(src, file);
+    const target = path.join(dest, rel);
+    await fs.mkdir(path.dirname(target), { recursive: true });
+    await fs.copyFile(file, target);
+    totalCopied++;
+  }
+  if (files.length > 0) {
+    console.log(`✓ Copied ${files.length} content asset(s) to public/${base}/`);
+  }
 }
-console.log(`✓ Copied ${copied} content asset(s) to public/blog/`);
+if (totalCopied === 0) console.log("✓ No content assets to copy");

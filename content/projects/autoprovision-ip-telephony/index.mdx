@@ -1,0 +1,39 @@
+---
+title: "AutoProvision IP Telephony"
+description: "Automated SIP provisioning for ~300 branches and ~1500 phones via Cloudtalk, Grandstream, Jinja2, and a small API gateway."
+publishDate: 2024-10-22
+tags: [python, jinja2, sip, grandstream, cloudtalk, automation]
+featured: false
+---
+
+This project automates IP telephony provisioning across ~300 branches. The SIP provider, **Cloudtalk**, exposes the closest SIP server URL plus username/password for each agent. The hardware platform, **Grandstream**, manages the physical phones. Both expose APIs, which means the whole provisioning pipeline can be automated end-to-end.
+
+### Provisioning steps
+
+1. Collect SIP configuration from Cloudtalk for each agent.
+2. Render IP-telephony XML configs with Jinja2 templates.
+3. Upload the configs to the Grandstream portal.
+4. When a phone boots and gets internet, it pulls its config from Grandstream and reboots into the correct profile.
+5. Phones are provisioned and ready to make calls.
+
+### Auth flow
+
+The API gateway sits behind an Okta + secrets-vault layer:
+
+1. Client requests an API key for a given branch number.
+2. Gateway verifies the user with Okta.
+3. Okta confirms the user is authenticated.
+4. Vault returns the Cloudtalk API key to the client.
+
+### Provisioning flow
+
+1. `POST /generate_configuration` with the branch number.
+2. Gateway authenticates against Cloudtalk and pulls SIP details for every phone in the branch.
+3. The XML config is generated and uploaded to Grandstream.
+4. A copy of the config is also archived to BOX for audit.
+
+### Why automate
+
+Each branch has 5–10 phones; ~300 branches means ~1500–2000 phones. Doing this by hand would burn weeks of engineer time and guarantee config drift. The pipeline turns it into an idempotent API call.
+
+> The implementation belongs to the company I built it for and isn't open source. This page is a high-level walkthrough of the architecture and flow.

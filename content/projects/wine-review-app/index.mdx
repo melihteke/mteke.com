@@ -1,0 +1,84 @@
+---
+title: "Wine Review Application"
+description: "A small Flask + SQLite app on top of a 130k-row Kaggle wine-review dataset, fronted by Cloudflare and deployed to Heroku."
+publishDate: 2024-07-29
+updatedDate: 2024-08-18
+tags: [python, flask, sqlite, heroku, cloudflare]
+featured: false
+link: "https://wine.mteke.com"
+---
+
+A weekend project to learn full-stack basics end-to-end. The data comes from a [Kaggle wine-reviews dataset](https://www.kaggle.com/datasets/zynicide/wine-reviews) — about 130 000 wines with country, designation, score, price, region, taster, and a tasting note. The app exposes the data through a small Flask + Flask-RESTX API and a plain HTML/CSS frontend.
+
+The stack:
+
+- Python **Flask + Flask-RESTX**
+- **SQLite3** as the store (the JSON dataset is converted into a SQLite DB at build time)
+- Plain HTML/CSS for the frontend
+- Deployed to **Heroku** PaaS, fronted by **Cloudflare**
+
+### Architecture
+
+Client traffic to `wine.mteke.com` lands at Cloudflare, which provides DDoS protection and bot mitigation. Cloudflare proxies it onward to a Heroku Dyno (LXC container) running the Flask app. Both legs of the connection are SSL.
+
+The Heroku app's direct hostname (`wine-review-application-XXXXX.herokuapp.com`) is locked down with IP allow-listing so it only accepts traffic from Cloudflare's edge. That means the public can only reach the app through Cloudflare — direct hits to Heroku are rejected.
+
+Heroku is wired to GitHub: any push to `main` triggers a fresh build of the Dyno. No manual deploy step.
+
+### API
+
+Only `GET /wine/{title}` is enabled publicly — the write methods are intentionally disabled to protect the dataset.
+
+Public read-only credentials:
+
+| Field | Value |
+| ----- | ----- |
+| Username | `user_readonly` |
+| Password | `password_readonly` |
+
+Browse the API docs at [wine.mteke.com](https://wine.mteke.com).
+
+### Calling it from Python
+
+```python
+import requests
+from requests.auth import HTTPBasicAuth
+from pprint import pprint
+
+api_url = "https://wine.mteke.com/wine/{title}"
+wine_title = "Kayra 2007 Buzbag Rezerv Öküzgözü Bogazkere Re"
+
+response = requests.get(
+    api_url.format(title=wine_title),
+    auth=HTTPBasicAuth("user_readonly", "password_readonly"),
+)
+
+if response.status_code == 200:
+    pprint(response.json(), indent=4)
+else:
+    pprint(f"Failed: {response.status_code}")
+```
+
+Sample response:
+
+```python
+[
+    {
+        "country": "Turkey",
+        "description": "This bright, brambly red blend of two Turkish grapes, "
+                       "the Öküzgözü and the Bogazkere, is brisk and bold...",
+        "designation": "Buzbag Rezerv Öküzgözü Bogazkere",
+        "points": "86",
+        "price": 25.0,
+        "province": "Elazığ-Diyarbakir",
+        "taster_name": "Anna Lee C. Iijima",
+        "title": "Kayra 2007 Buzbag Rezerv Öküzgözü Bogazkere Red",
+        "variety": "Red Blend",
+        "winery": "Kayra",
+    }
+]
+```
+
+### Why bother
+
+The app itself is a toy. The interesting part is the deployment shape — public DNS → Cloudflare WAF → IP-allow-listed origin on a managed PaaS, deployed straight from `git push`. That's a pattern that scales surprisingly far for small services.

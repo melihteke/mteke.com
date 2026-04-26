@@ -24,7 +24,15 @@ const prettyCodeOptions: PrettyCodeOptions = {
   defaultLang: "plaintext",
 };
 
-export function MDXContent({ source, slug }: { source: string; slug: string }) {
+export function MDXContent({
+  source,
+  slug,
+  base = "blog",
+}: {
+  source: string;
+  slug: string;
+  base?: "blog" | "projects";
+}) {
   return (
     <MDXRemote
       source={source}
@@ -32,7 +40,7 @@ export function MDXContent({ source, slug }: { source: string; slug: string }) {
       options={{
         parseFrontmatter: false,
         mdxOptions: {
-          remarkPlugins: [remarkGfm, rewriteImagePaths(slug)],
+          remarkPlugins: [remarkGfm, rewriteImagePaths(slug, base)],
           rehypePlugins: [
             rehypeSlug,
             [

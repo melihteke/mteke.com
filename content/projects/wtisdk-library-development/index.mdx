@@ -1,0 +1,26 @@
+---
+title: "WTI SDK"
+description: "A Pythonic API wrapper for Western Telematic console servers and PDUs — auth, plug control, status reads, reboots, all from your scripts."
+publishDate: 2024-11-07
+tags: [python, sdk, networking, console-server, pdu]
+featured: false
+link: "https://pypi.org/project/wtisdk/"
+---
+
+`wtisdk` is a Python library I built as an API wrapper for [Western Telematic Inc. (WTI)](https://www.wti.com/) devices. It hides the raw HTTP plumbing and gives you a clean, typed Python interface for the things network admins actually want to do: authenticate, list and toggle outlets, read status, reboot devices.
+
+WTI specialises in console and power-management hardware for network gear. Their devices are everywhere in network closets — but the API surface is fiddly enough that everyone ends up writing the same wrapper twice. The SDK is meant to be that wrapper, written once and reused.
+
+### Key features
+
+- Simplified API interactions with WTI devices
+- Outlet / plug control and status reads
+- Easy integration into existing Python projects
+
+### Install
+
+```bash
+pip install wtisdk
+```
+
+The package is published on PyPI and the source is pinned in the GitHub repo linked above.

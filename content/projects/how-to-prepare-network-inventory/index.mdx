@@ -1,0 +1,68 @@
+---
+title: "Network Inventory — Source of Truth on NetBox"
+description: "A pragmatic, no-paid-tool pipeline for keeping NetBox in sync with the real network: NMAP discovery, SNMP fingerprinting, per-vendor config check engines."
+publishDate: 2024-12-09
+tags: [netbox, nmap, snmp, python, netdevops, source-of-truth]
+featured: true
+---
+
+Standing up NetBox is easy. Keeping it accurate over time — that's the work. This is the pipeline I use to bootstrap inventory and keep NetBox honest as the source of truth, without paying for a commercial sync tool.
+
+The design has two engines: a **Device Discovery Engine** that finds nodes on the network, and a **Device Configuration Check Engine** that fingerprints them and writes them into NetBox.
+
+### Device Discovery Engine
+
+Walks each subnet and identifies live network gear:
+
+1. **Network scanning** — sweep IP ranges to find responding hosts.
+2. **SNMP response check** — for each live host, see if it answers SNMP.
+3. **sysDescription retrieval** — pull MIB `1.3.6.1.2.1.1.1.0` to identify the platform.
+
+```python
+import nmap
+
+def scan_ports(ip):
+    nm = nmap.PortScanner()
+    nm.scan(ip, "22,161", arguments="-sU")
+
+    for host in nm.all_hosts():
+        print(f"Scanning {host}")
+        for proto in nm[host].all_protocols():
+            for port in nm[host][proto].keys():
+                state = nm[host][proto][port]["state"]
+                print(f"Port {port}/{proto} is {state}")
+
+scan_ports("10.60.115.132")
+```
+
+```bash
+$ snmpwalk -v3 -l authPriv -u SNMPV3User -a SHA -A ABCDEF -x AES -X ABCDEF \
+    10.24.115.120 1.3.6.1.2.1.1.1.0
+SNMPv2-MIB::sysDescr.0 = STRING: Cisco IOS Software [Cupertino], Catalyst L3 Switch Software (CAT9K_IOSXE), Version 17.9.4a, RELEASE SOFTWARE (fc3)
+```
+
+> Python's `subprocess` library is perfectly fine if you want to shell out to `snmpwalk` instead of using a pure-Python SNMP client.
+
+### Device Configuration Check Engine
+
+Once a device's `sysDescription` tells us what platform we're on, the matching per-vendor check engine takes over:
+
+1. **Command execution** — run a fixed set of show-commands to gather facts.
+2. **Payload preparation** — translate the raw output into a NetBox-shaped object.
+3. **Device addition** — POST it to the NetBox API.
+
+### Continuous synchronisation
+
+The whole loop runs every X hours/days, so NetBox keeps tracking real-world drift instead of slowly diverging.
+
+### Algorithm
+
+1. Start
+2. Network scan (NMAP)
+3. SNMP response check
+   - If responsive: retrieve sysDescription → pick the right check engine → run commands → prepare payload → write to NetBox
+   - If silent: skip to next IP
+4. Wait X hours/days
+5. Repeat
+
+That's it — a small, boring pipeline that turns a green-field NetBox into a usable inventory and keeps it that way.
