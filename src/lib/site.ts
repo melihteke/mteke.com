@@ -4,7 +4,7 @@ export const siteConfig = {
   title: "Melih Teke — Network Engineer & NetDevOps",
   description:
     "Notes and experiments on network automation, NetDevOps, Python, Cisco, and AI.",
-  url: "https://mteke.com",
+  url: "https://www.mteke.com",
   locale: "en",
   author: {
     name: "Melih Teke",

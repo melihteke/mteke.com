@@ -62,21 +62,27 @@ When both jobs are green, your site is live at `https://melihteke.github.io/mtek
 > - **Build error in MDX** → open the failing post, fix it locally, push again. Posts that genuinely won't compile are skipped at build with a `[posts] skipping ...` warning.
 > - **Permissions error during deploy** → confirm Settings → Actions → General → "Workflow permissions" is set to **Read and write permissions**.
 
-## 4. Custom domain (`mteke.com`)
+## 4. Custom domain (`www.mteke.com`)
+
+The site is canonical at `www.mteke.com`; the apex (`mteke.com`) redirects to it automatically.
 
 ### 4a. Add the CNAME to the repo
 
-`public/CNAME` already contains `mteke.com`. Verify it's still there after build (`out/CNAME` exists). Pages reads this file to know which domain to serve.
+`public/CNAME` contains `www.mteke.com`. Verify it's still there after build (`out/CNAME` exists). Pages reads this file to know which domain to serve.
 
 ### 4b. Tell GitHub the domain
 
-Settings → Pages → **Custom domain**: type `mteke.com`, click **Save**. GitHub starts a DNS check.
+Settings → Pages → **Custom domain**: type `www.mteke.com`, click **Save**. GitHub starts a DNS check.
 
 ### 4c. Configure DNS at your registrar
 
-Two records, both at the apex (`mteke.com`) and one for `www`:
+**`www` — `CNAME` to GitHub Pages:**
 
-**Apex `mteke.com` — four `A` records pointing at GitHub Pages IPs:**
+```
+www.mteke.com  CNAME  melihteke.github.io
+```
+
+**Apex `mteke.com` — four `A` records (GitHub redirects apex → `www`):**
 
 ```
 mteke.com  A  185.199.108.153
@@ -85,19 +91,13 @@ mteke.com  A  185.199.110.153
 mteke.com  A  185.199.111.153
 ```
 
-(If your DNS provider supports `ALIAS`/`ANAME` to a hostname, point it at `melihteke.github.io` instead — preferable but optional.)
-
-**`www` subdomain — `CNAME`:**
-
-```
-www.mteke.com  CNAME  melihteke.github.io
-```
+(If your DNS provider supports `ALIAS`/`ANAME` to a hostname, point the apex at `melihteke.github.io` instead — preferable but optional.)
 
 DNS propagation usually takes 5–30 minutes. Check progress with:
 
 ```bash
-dig mteke.com +short
 dig www.mteke.com +short
+dig mteke.com +short
 ```
 
 ### 4d. Enforce HTTPS
@@ -108,11 +108,11 @@ Once GitHub finishes the domain check (the warning under Pages disappears), the 
 
 | Check | URL / command |
 | ----- | ------------- |
-| Site loads | `https://mteke.com/` |
-| `www` redirects to apex | `https://www.mteke.com/` |
-| HTTPS cert is valid | browser padlock; or `curl -I https://mteke.com` |
-| RSS feed | `https://mteke.com/rss.xml` |
-| Sitemap | `https://mteke.com/sitemap.xml` |
+| Site loads | `https://www.mteke.com/` |
+| Apex redirects to `www` | `https://mteke.com/` → `https://www.mteke.com/` |
+| HTTPS cert is valid | browser padlock; or `curl -I https://www.mteke.com` |
+| RSS feed | `https://www.mteke.com/rss.xml` |
+| Sitemap | `https://www.mteke.com/sitemap.xml` |
 | Search | open `/blog`, type — both grid filtering (always) and Pagefind dropdown (production only) |
 
 ## 6. Day-to-day workflow
