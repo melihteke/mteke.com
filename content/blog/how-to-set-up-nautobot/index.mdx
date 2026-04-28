@@ -1,0 +1,111 @@
+---
+title: "How to Set Up Nautobot with Docker Compose"
+description: "Step-by-step guide to deploying Nautobot using Docker Compose"
+publishDate: 2026-04-28
+tags: ["nautobot", "docker", "network-automation"]
+# cover: ./cover.png
+draft: true
+---
+
+# How to Set Up Nautobot with Docker Compose
+
+This guide walks you through setting up and running a Nautobot instance using Docker Compose.
+
+## Prerequisites
+
+Make sure the following tools are installed on your system:
+
+- Docker: https://docs.docker.com/get-started/get-docker/
+- Poetry: https://python-poetry.org/docs/#installation
+
+> 💡 **Tip**  
+> Use strong, unique credentials and never commit sensitive files to version control.
+
+---
+
+## Setup Steps
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/nautobot/nautobot-docker-compose.git
+```
+
+### 2. Navigate to the Project Directory
+```bash
+cd nautobot-docker-compose
+```
+
+### 3. Set Up the Poetry Environment
+```bash
+poetry shell
+poetry lock
+poetry install
+```
+
+### 4. Prepare Environment Files
+```bash
+cp environments/local.example.env environments/local.env
+cp environments/creds.example.env environments/creds.env
+```
+
+### 5. Configure Environment Variables
+
+Edit the environment files according to your setup:
+```bash
+vi environments/local.env
+vi environments/creds.env
+```
+
+### 6. Secure Environment Files
+
+Restrict file permissions:
+```bash
+chmod 0600 environments/local.env environments/creds.env
+```
+
+### 7. Build  and run the Containers
+```bash
+invoke build
+invoke start
+```
+
+### 8. Verify Running Containers
+```bash
+docker container ls
+CONTAINER ID   IMAGE                           COMMAND                  CREATED         STATUS                   PORTS                                                                                  NAMES
+143f10daa229   networktocode/nautobot:latest   "nautobot-server rqw…"   2 minutes ago   Up 2 minutes (healthy)                                                                                          nautobot-docker-compose_celery_worker_1
+bb29124d7acb   networktocode/nautobot:latest   "/docker-entrypoint.…"   2 minutes ago   Up 2 minutes (healthy)   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp, 0.0.0.0:8443->8443/tcp, :::8443->8443/tcp   nautobot-docker-compose_nautobot_1
+ad57ac1749b3   redis:alpine                    "docker-entrypoint.s…"   2 minutes ago   Up 2 minutes             6379/tcp                                                                               nautobot-docker-compose_redis_1
+5ab83264e6fe   postgres:10                     "docker-entrypoint.s…"   2 minutes ago   Up 2 minutes             5432/tcp                                                                               nautobot-docker-compose_postgres_1
+```
+
+### 9. Create a Superuser
+
+Run the following command and follow the prompts:
+
+```bash
+invoke createsuperuser
+Username: administrator
+Email address:
+Password:
+Password (again):
+Superuser created successfully.
+```
+
+### 10. Access the Web Interface
+
+Open your browser and navigate to:
+```bash
+http://localhost:8080/
+```
+
+## Troubleshooting
+- If containers fail to start, check logs:
+```bash
+docker compose logs -f
+```
+- If you encounter permission issues:
+```bash
+sudo chown -R $USER:$USER .
+```
